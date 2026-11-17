@@ -78,7 +78,7 @@ le déploiement de whoami, son exposition par un Service NodePort, la montée en
 gestion d'une mise à jour suivie d'un retour arrière. Le défi final vérifie la résolution DNS interne.
 
 Sujet : TP 4 Kubernetes, GL ENSAH, Université Abdelmalek Essaadi, année universitaire 2026/2027.
-Réalisé par : El Abdellaoui Moad. Date de génération : 17/11/2026 11:37.
+Réalisé par : El Abdellaoui Moad. Date de génération : 17/11/2026 11:50.
 
 Le rapport présente les configurations, la démarche et les réponses aux questions du sujet.
 Les observations expérimentales sont regroupées dans la section des résultats.
@@ -99,20 +99,168 @@ reste dans .state et ne doit pas être publié.
 Versions exécutées : Docker 29.9.3, kind v0.33.0, Kubernetes v1.37.0 et Helm v4.3.1.
 L'image du nœud kind est fixée par digest. La preuve 00-environment.txt conserve les versions complètes.
 
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ docker run --rm hello-world
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Hello from Docker! confirme que le client a joint le démon, lancé le conteneur de test et récupéré sa sortie.
+
+{\footnotesize\color{teal} Source : 01-hello-world.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kind version
+kind v0.33.0 go1.26.7 linux/amd64
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : kind v0.33.0 est installé et exécutable sur Linux amd64.
+
+{\footnotesize\color{teal} Source : 00-environment.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl version --client
+Client Version: v1.37.0
+Kustomize Version: v5.8.1
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le client kubectl v1.37.0 est installé. Kustomize est l'outil de personnalisation des manifests intégré au client.
+
+{\footnotesize\color{teal} Source : 00-environment.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ helm version
+version.BuildInfo{Version:"v4.3.1", GitCommit:"c0d08d0d6d9424d4a14febb5e8a3e51b0dd00dff", GitTreeState:"clean", GoVersion:"go1.27.2", KubeClientVersion:"v1.37"}
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Helm v4.3.1 est disponible. Le TP vérifie ce prérequis, mais les exercices A à D ne déploient aucun chart Helm.
+
+{\footnotesize\color{teal} Source : 00-environment.txt.\par}
+\end{minipage}\par\medskip
+
 \clearpage
 \Needspace{8\baselineskip}\section{Partie A : création du cluster}
 
 Le script exécute docker run hello-world puis crée le cluster tp-k8s à partir de kind-config.yaml.
 Il attend que le nœud et les Pods de kube-system deviennent Ready avant de continuer.
 
+\par\medskip\noindent\begin{minipage}{\linewidth}
 \par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
 \begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
-kind create cluster --config kind-config.yaml
-kubectl get nodes -o wide
-kubectl get pods -n kube-system -o wide
-docker ps
+$ kind create cluster --config kind-config.yaml --wait 300s
+using docker due to KIND_EXPERIMENTAL_PROVIDER
+Creating cluster "tp-k8s" ...
+ - Ensuring node image (kindest/node:v1.37.0)   ...
+ [OK] Ensuring node image (kindest/node:v1.37.0) 
+ - Preparing nodes    ...
+ [OK] Preparing nodes  
+ - Writing configuration   ...
+ [OK] Writing configuration 
+ - Starting control-plane   ...
+ [OK] Starting control-plane 
+ - Installing CNI   ...
+ [OK] Installing CNI 
+ - Installing StorageClass   ...
+ [OK] Installing StorageClass 
+ - Waiting <= 5m0s for control-plane = Ready   ...
+ [OK] Waiting <= 5m0s for control-plane = Ready 
+ - Ready after 16s 
+Set kubectl context to "kind-tp-k8s"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-tp-k8s --kubeconfig /home/moadabdou/coding/projects/cloud/tp4/.state/kubeconfig
+
+Not sure what to do next?   Check out https://kind.sigs.k8s.io/docs/user/quick-start/
 \end{Verbatim}
 \end{minipage}\par\vspace{6pt}
+
+Interprétation : kind a créé le nœud, démarré le plan de contrôle, installé le réseau CNI et attendu Ready. Le message Ready after 16s confirme cette dernière attente ; il ne comprend pas tout le temps de téléchargement de l'image.
+
+{\footnotesize\color{teal} Source : 02-create-cluster.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get nodes -o wide
+NAME                   STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION            CONTAINER-RUNTIME
+tp-k8s-control-plane   Ready    control-plane   27s   v1.37.0   172.25.0.2    <none>        Debian GNU/Linux 13 (trixie)   7.3.1-1-cachyos (amd64)   containerd://2.3.4
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le nœud tp-k8s-control-plane est Ready sous Kubernetes v1.37.0. Son adresse interne est 172.25.0.2 et son runtime est containerd. Le cluster est donc joignable et prêt à accueillir des Pods.
+
+{\footnotesize\color{teal} Source : 03-nodes.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get pods -n kube-system -o wide
+NAME                                           READY   STATUS    RESTARTS   AGE   IP           NODE                   NOMINATED NODE   READINESS GATES
+coredns-559f6c778d-dvjsr                       1/1     Running   0          17s   10.244.0.4   tp-k8s-control-plane   <none>           <none>
+coredns-559f6c778d-krrlk                       1/1     Running   0          17s   10.244.0.2   tp-k8s-control-plane   <none>           <none>
+etcd-tp-k8s-control-plane                      1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kindnet-m9nkh                                  1/1     Running   0          18s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-apiserver-tp-k8s-control-plane            1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-controller-manager-tp-k8s-control-plane   1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-proxy-s565r                               1/1     Running   0          18s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-scheduler-tp-k8s-control-plane            1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Les huit Pods système sont Running avec 1/1 conteneur prêt et aucun redémarrage. On retrouve notamment etcd, les composants du plan de contrôle, kube-proxy, kindnet et deux réplicas CoreDNS.
+
+{\footnotesize\color{teal} Source : 04-system-pods.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ docker ps --filter label=io.x-k8s.kind.cluster=tp-k8s
+CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                                                   NAMES
+5503c2c301be   kindest/node:v1.37.0   "/usr/local/bin/entr…"   53 seconds ago   Up 49 seconds   127.0.0.1:30080->30080/tcp, 127.0.0.1:43925->6443/tcp   tp-k8s-control-plane
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Un conteneur Docker représente le nœud kind. Le port 30080 du nœud est publié sur 127.0.0.1:30080 ; le port 6443 de l'API est publié sur le port local 43925.
+
+{\footnotesize\color{teal} Source : 05-docker-nodes.txt.\par}
+\end{minipage}\par\medskip
 
 Dans kind, un nœud Kubernetes est un conteneur Docker contenant notamment kubelet et containerd.
 Les Pods applicatifs s'exécutent à l'intérieur de ce nœud et ne correspondent pas chacun à un
@@ -130,18 +278,248 @@ Un Pod autonome web est créé avec nginx:1.27. Les commandes describe, logs et 
 de consulter sa configuration, les requêtes reçues et l'environnement du conteneur. L'ouverture
 d'un shell interactif du sujet est automatisée par exec suivi d'un script shell non interactif.
 
+\par\medskip\noindent\begin{minipage}{\linewidth}
 \par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
 \begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
-kubectl run web --image=nginx:1.27 --port=80
-kubectl describe pod web
-kubectl exec web -- sh -c 'hostname; nginx -v; cat /etc/os-release'
-kubectl port-forward pod/web 8080:80
-curl http://127.0.0.1:8080
-kubectl logs web
-kubectl delete pod web
-kubectl get pods -l run=web
+$ kubectl run web --image=nginx:1.27 --port=80
+pod/web created
 \end{Verbatim}
 \end{minipage}\par\vspace{6pt}
+
+Interprétation : pod/web created confirme la création de l'objet Pod autonome. Ce message ne suffit pas à prouver que Nginx est prêt ; la vérification suivante montre son état.
+
+{\footnotesize\color{teal} Source : 06-run-web.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+Extrait des 24 premières lignes ; la sortie intégrale est conservée dans 07-web-describe.txt.
+
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl describe pod web
+Name:             web
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             tp-k8s-control-plane/172.25.0.2
+Start Time:       Tue, 17 Nov 2026 11:23:29 +0000
+Labels:           run=web
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.5
+IPs:
+  IP:  10.244.0.5
+Containers:
+  web:
+    Container ID:   containerd://56c7a1730d4d781461fa31f3636172d5e8853b1eae9066a8496b521f11d3cf41
+    Image:          nginx:1.27
+    Image ID:       docker.io/library/nginx@sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 17 Nov 2026 11:23:37 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le Pod est Running sur tp-k8s-control-plane, avec l'adresse 10.244.0.5. Le conteneur utilise nginx:1.27, est Ready et n'a pas redémarré. Le port 80 est déclaré dans sa configuration.
+
+{\footnotesize\color{teal} Source : 07-web-describe.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl exec web -- sh -c 'hostname; nginx -v; cat /etc/os-release'
+web
+nginx version: nginx/1.27.5
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le nom web confirme que la commande s'exécute dans le Pod. L'image nginx:1.27 contient ici Nginx 1.27.5 sur Debian 12 ; le système du conteneur est distinct du Linux de l'hôte.
+
+{\footnotesize\color{teal} Source : 08-web-shell.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl port-forward pod/web 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+Handling connection for 8080
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : kubectl écoute sur les adresses locales IPv4 et IPv6, puis transfère les connexions au port 80 du Pod. Handling connection signale qu'une requête a traversé ce tunnel.
+
+{\footnotesize\color{teal} Source : 09-port-forward.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ curl http://127.0.0.1:8080
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le HTML retourné contient le titre Welcome to nginx!. Le test HTTP a atteint Nginx via le port-forward ; le port 8080 n'est pas un Service Kubernetes.
+
+{\footnotesize\color{teal} Source : 10-nginx.html.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl logs web
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/11/17 11:23:38 [notice] 1#1: using the "epoll" event method
+2026/11/17 11:23:38 [notice] 1#1: nginx/1.27.5
+2026/11/17 11:23:38 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2026/11/17 11:23:38 [notice] 1#1: OS: Linux 7.3.1-1-cachyos
+2026/11/17 11:23:38 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 2147483584:2147483584
+2026/11/17 11:23:38 [notice] 1#1: start worker processes
+2026/11/17 11:23:38 [notice] 1#1: start worker process 35
+2026/11/17 11:23:38 [notice] 1#1: start worker process 36
+2026/11/17 11:23:38 [notice] 1#1: start worker process 37
+2026/11/17 11:23:38 [notice] 1#1: start worker process 38
+2026/11/17 11:23:38 [notice] 1#1: start worker process 39
+2026/11/17 11:23:38 [notice] 1#1: start worker process 40
+2026/11/17 11:23:38 [notice] 1#1: start worker process 41
+2026/11/17 11:23:38 [notice] 1#1: start worker process 42
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+Sortie de la même commande (suite).
+
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+127.0.0.1 - - [17/Nov/2026:11:23:39 +0000] "GET / HTTP/1.1" 200 615 "-" "curl/8.23.0" "-"
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Nginx a terminé son initialisation et démarré ses workers. La dernière ligne enregistre GET / avec le statut 200 et 615 octets : elle confirme la requête HTTP réussie du test précédent.
+
+{\footnotesize\color{teal} Source : 11-web-logs.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl delete pod web
+pod "web" deleted from default namespace
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : La suppression est confirmée par kubectl. Comme aucun ReplicaSet ne possède ce Pod, aucun contrôleur n'est chargé de le recréer automatiquement.
+
+{\footnotesize\color{teal} Source : session.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get pods -l run=web -o json
+{
+    "apiVersion": "v1",
+    "items": [],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le tableau items est vide après la suppression : il n'existe plus de Pod portant le label run=web. C'est la preuve que le Pod autonome n'a pas été recréé.
+
+{\footnotesize\color{teal} Source : 12-standalone-deleted.json.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl run web --image=nginx:1.27 --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: web
+  name: web
+  namespace: default
+spec:
+  containers:
+  - image: nginx:1.27
+    name: web
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le dry-run produit un manifeste YAML sans créer de Pod. Il expose les champs apiVersion, kind, metadata et spec ; restartPolicy concerne les conteneurs du Pod, pas la recréation d'un objet supprimé.
+
+{\footnotesize\color{teal} Source : 13-generated-pod.yaml.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl apply -f pod.yaml
+pod/web created
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le manifeste déclaratif crée un nouveau Pod web. Le script attend ensuite sa condition Ready avant de poursuivre. Réappliquer ce même manifeste permet de maintenir la configuration déclarée.
+
+{\footnotesize\color{teal} Source : 14-declarative-pod.txt.\par}
+\end{minipage}\par\medskip
 
 Le script vérifie la page Welcome to nginx avant de supprimer le Pod. Après suppression, il
 vérifie que la liste des Pods portant le label run=web est vide. Le Pod est ensuite recréé
@@ -162,16 +540,166 @@ whoami.yaml contient un Deployment de trois réplicas et un Service NodePort. Le
 sélectionne les Pods ayant le label app=whoami ; le Service utilise le même sélecteur.
 Le port 80 du Service est dirigé vers le port 80 des Pods et exposé sur le NodePort 30080.
 
+\par\medskip\noindent\begin{minipage}{\linewidth}
 \par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
 \begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
-kubectl apply -f whoami.yaml
-kubectl get deploy,rs,pods,svc -o wide
-kubectl get endpointslices -l kubernetes.io/service-name=whoami -o wide
-curl http://127.0.0.1:30080
-kubectl delete pod <un-pod-whoami>
-kubectl scale deployment whoami --replicas=6
+$ kubectl apply -f whoami.yaml
+deployment.apps/whoami created
+service/whoami created
 \end{Verbatim}
 \end{minipage}\par\vspace{6pt}
+
+Interprétation : Deux objets sont créés : le Deployment whoami et le Service whoami. Le premier pilote trois réplicas ; le second expose leurs ports HTTP.
+
+{\footnotesize\color{teal} Source : 15-deployment.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get deploy,rs,pods,svc -o wide
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                 SELECTOR
+deployment.apps/whoami   3/3     3            3           10s   whoami       traefik/whoami:v1.10   app=whoami
+
+NAME                               DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                 SELECTOR
+replicaset.apps/whoami-57487f77f   3         3         3       10s   whoami       traefik/whoami:v1.10   app=whoami,pod-template-hash=57487f77f
+
+NAME                         READY   STATUS    RESTARTS   AGE   IP           NODE                   NOMINATED NODE   READINESS GATES
+pod/web                      1/1     Running   0          11s   10.244.0.6   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-cxkzd   1/1     Running   0          10s   10.244.0.8   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-m9p8b   1/1     Running   0          10s   10.244.0.7   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-nlgnj   1/1     Running   0          10s   10.244.0.9   tp-k8s-control-plane   <none>           <none>
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE   SELECTOR
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        51s   <none>
+service/whoami       NodePort    10.96.151.170   <none>        80:30080/TCP   10s   app=whoami
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le Deployment est à 3/3, son ReplicaSet possède trois Pods Ready et le Service est de type NodePort. L'adresse ClusterIP est 10.96.151.170 ; 80:30080/TCP relie le port du Service au NodePort accessible depuis l'hôte.
+
+{\footnotesize\color{teal} Source : 16-resources.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get endpointslices -l kubernetes.io/service-name=whoami -o wide
+NAME           ADDRESSTYPE   PORTS   ENDPOINTS                          AGE
+whoami-llmsp   IPv4          80      10.244.0.7,10.244.0.8,10.244.0.9   10s
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : L'EndpointSlice référence les trois adresses 10.244.0.7, 10.244.0.8 et 10.244.0.9 sur le port 80. Ce sont les destinations sélectionnées par le Service avec le label app=whoami.
+
+{\footnotesize\color{teal} Source : 17-endpointslices.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ curl http://127.0.0.1:30080
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:12530
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:15106
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+Sortie de la même commande (suite).
+
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+RemoteAddr: 10.244.0.1:25427
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Chaque réponse identifie le Pod qui l'a traitée par Hostname. Sur les vingt requêtes enregistrées, les trois noms de Pods apparaissent : le Service distribue donc effectivement les connexions entre les trois réplicas. La sortie ci-dessus montre les trois premières réponses ; les vingt réponses figurent dans la trace complète.
+
+{\footnotesize\color{teal} Source : 18-load-balancing.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl delete pod whoami-57487f77f-cxkzd
+pod "whoami-57487f77f-cxkzd" deleted from default namespace
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le Pod est supprimé, puis le ReplicaSet rétablit les trois réplicas désirés. Les captures JSON avant/après montrent un nouvel UID : un nouveau Pod a remplacé celui supprimé, contrairement au Pod autonome web.
+
+{\footnotesize\color{teal} Source : 20-delete-managed-pod.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl scale deployment whoami --replicas=6
+deployment.apps/whoami scaled
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : deployment.apps/whoami scaled confirme la modification du nombre désiré de réplicas. Les Pods supplémentaires sont créés de manière asynchrone ; leur disponibilité est contrôlée dans la sortie suivante.
+
+{\footnotesize\color{teal} Source : 22-scale.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get deploy,rs,pods -o wide
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                 SELECTOR
+deployment.apps/whoami   6/6     6            6           17s   whoami       traefik/whoami:v1.10   app=whoami
+
+NAME                               DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                 SELECTOR
+replicaset.apps/whoami-57487f77f   6         6         6       17s   whoami       traefik/whoami:v1.10   app=whoami,pod-template-hash=57487f77f
+
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE                   NOMINATED NODE   READINESS GATES
+pod/web                      1/1     Running   0          18s   10.244.0.6    tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-kd87d   1/1     Running   0          1s    10.244.0.12   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-m9p8b   1/1     Running   0          17s   10.244.0.7    tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-mn8lw   1/1     Running   0          3s    10.244.0.10   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-nlgnj   1/1     Running   0          17s   10.244.0.9    tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-nnt6x   1/1     Running   0          1s    10.244.0.13   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-vd52v   1/1     Running   0          1s    10.244.0.11   tp-k8s-control-plane   <none>           <none>
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le Deployment et son unique ReplicaSet sont à 6/6 ; six Pods whoami sont Running. L'image reste v1.10 et le hash du ReplicaSet reste identique : un changement d'échelle seul ne crée pas de nouvelle révision.
+
+{\footnotesize\color{teal} Source : 23-six-replicas.txt.\par}
+\end{minipage}\par\medskip
 
 Vingt requêtes HTTP permettent de relever les Hostname servis. Plusieurs noms indiquent que
 plusieurs Pods ont traité les requêtes ; la répartition n'est pas nécessairement un round-robin strict.
@@ -186,18 +714,204 @@ Une sonde HTTP commence avant la première mise à jour et continue jusqu'après
 Elle enregistre l'heure UTC, le statut HTTP, le Hostname, la latence et les éventuelles erreurs
 dans availability.csv. L'intervalle minimal est de 0,5 seconde, auquel s'ajoute la durée de la requête.
 
+\par\medskip\noindent\begin{minipage}{\linewidth}
 \par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
 \begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
-kubectl set image deployment/whoami whoami=traefik/whoami:v1.11
-kubectl rollout status deployment/whoami
-kubectl rollout history deployment/whoami
-kubectl set image deployment/whoami whoami=traefik/whoami:v9.99
-kubectl get pods
-kubectl rollout undo deployment/whoami
-kubectl rollout status deployment/whoami
-kubectl rollout history deployment/whoami
+$ kubectl set image deployment/whoami whoami=traefik/whoami:v1.11
+deployment.apps/whoami image updated
 \end{Verbatim}
 \end{minipage}\par\vspace{6pt}
+
+Interprétation : Le modèle de Pod du Deployment est modifié vers v1.11. Le contrôleur crée un nouveau ReplicaSet et remplace progressivement les anciens Pods ; image updated ne signifie pas encore que le rollout est terminé.
+
+{\footnotesize\color{teal} Source : 25-successful-update.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl rollout status deployment/whoami --timeout=240s
+Waiting for deployment spec update to be observed...
+Waiting for deployment "whoami" rollout to finish: 2 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 2 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 3 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 3 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 3 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 3 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 3 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 4 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 4 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 4 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 4 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 4 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 5 out of 6 new replicas have been updated...
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+Sortie de la même commande (suite).
+
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+Waiting for deployment "whoami" rollout to finish: 5 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 5 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 5 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 2 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 2 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 2 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "whoami" rollout to finish: 5 of 6 updated replicas are available...
+deployment "whoami" successfully rolled out
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Les réplicas v1.11 deviennent disponibles pendant que les anciens Pods sont retirés. Le message final successfully rolled out confirme la fin de la mise à jour. La sonde HTTP relève néanmoins un reset isolé à 11:24:14 UTC : la fin du rollout ne garantit pas que chaque requête a réussi.
+
+{\footnotesize\color{teal} Source : 26-successful-rollout.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl rollout history deployment/whoami
+deployment.apps/whoami 
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Les révisions 1 et 2 correspondent aux modèles v1.10 et v1.11. CHANGE-CAUSE vaut <none> car aucune annotation de cause de modification n'a été fournie.
+
+{\footnotesize\color{teal} Source : 27-history-before-failure.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl set image deployment/whoami whoami=traefik/whoami:v9.99
+deployment.apps/whoami image updated
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : L'API accepte cette référence d'image dans le Deployment sans vérifier immédiatement son existence dans le registre. L'échec devient visible lorsque kubelet essaie de télécharger l'image.
+
+{\footnotesize\color{teal} Source : 28-broken-update.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get pods -l app=whoami -o wide
+NAME                      READY   STATUS             RESTARTS   AGE   IP            NODE                   NOMINATED NODE   READINESS GATES
+whoami-86d567c94d-fpxh5   0/1     ImagePullBackOff   0          16s   10.244.0.20   tp-k8s-control-plane   <none>           <none>
+whoami-86d567c94d-hgqbh   0/1     ErrImagePull       0          16s   10.244.0.21   tp-k8s-control-plane   <none>           <none>
+whoami-86d567c94d-pkdk2   0/1     ErrImagePull       0          16s   10.244.0.22   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-29r84    1/1     Running            0          20s   10.244.0.17   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-5k9j4    1/1     Running            0          27s   10.244.0.16   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-cxrpd    1/1     Running            0          27s   10.244.0.14   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-tccgc    1/1     Running            0          19s   10.244.0.18   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-ts87p    1/1     Running            0          27s   10.244.0.15   tp-k8s-control-plane   <none>           <none>
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Les nouveaux Pods affichent ErrImagePull ou ImagePullBackOff et restent à 0/1. Cinq anciens Pods v1.11 restent Running et Ready. Le contrôleur respecte ainsi la disponibilité minimale de cinq réplicas avec maxUnavailable=25 \% sur six réplicas désirés.
+
+{\footnotesize\color{teal} Source : 30-broken-pods.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ curl http://127.0.0.1:30080
+Hostname: whoami-c66799bf6-5k9j4
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.16
+IP: fe80::40f0:31ff:fe9e:f568
+RemoteAddr: 10.244.0.1:60235
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Une réponse HTTP whoami est reçue pendant l'échec de téléchargement. Le Hostname désigne un ancien Pod sain ; les Pods en erreur ne sont pas prêts à recevoir le trafic du Service.
+
+{\footnotesize\color{teal} Source : 33-http-during-failure.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl rollout undo deployment/whoami
+Warning: resource deployments/whoami was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/whoami rolled back
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : rolled back confirme le retour au modèle précédent v1.11. L'avertissement précise que l'annotation last-applied-configuration n'est pas réécrite : un futur apply du manifeste initial pourrait rétablir sa configuration v1.10 à trois réplicas.
+
+{\footnotesize\color{teal} Source : 34-rollback.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl rollout status deployment/whoami --timeout=240s
+Waiting for deployment "whoami" rollout to finish: 5 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 5 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 5 out of 6 new replicas have been updated...
+Waiting for deployment "whoami" rollout to finish: 5 of 6 updated replicas are available...
+Waiting for deployment "whoami" rollout to finish: 5 of 6 updated replicas are available...
+deployment "whoami" successfully rolled out
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Le ReplicaSet v1.11 est remis à six réplicas prêts et le rollout se termine avec succès. Le script vérifie également dans le JSON final l'image v1.11 et readyReplicas=6.
+
+{\footnotesize\color{teal} Source : 35-rollback-status.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl rollout history deployment/whoami
+deployment.apps/whoami 
+REVISION  CHANGE-CAUSE
+1         <none>
+3         <none>
+4         <none>
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : L'historique final contient les révisions 1, 3 et 4. Le ReplicaSet v1.11 a été réutilisé lors du rollback et porte désormais la révision 4 ; la révision 2 n'apparaît donc plus comme révision courante de ce même ReplicaSet.
+
+{\footnotesize\color{teal} Source : 36-rollout-history.txt.\par}
+\end{minipage}\par\medskip
+
+\par\medskip\noindent\begin{minipage}{\linewidth}
+\par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
+$ kubectl get rs -l app=whoami -o wide
+NAME                DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                 SELECTOR
+whoami-57487f77f    0         0         0       50s   whoami       traefik/whoami:v1.10   app=whoami,pod-template-hash=57487f77f
+whoami-86d567c94d   0         0         0       20s   whoami       traefik/whoami:v9.99   app=whoami,pod-template-hash=86d567c94d
+whoami-c66799bf6    6         6         6       31s   whoami       traefik/whoami:v1.11   app=whoami,pod-template-hash=c66799bf6
+\end{Verbatim}
+\end{minipage}\par\vspace{6pt}
+
+Interprétation : Trois ReplicaSets sont conservés : v1.10 et v9.99 à zéro réplica, v1.11 à six réplicas. Le rollback a réutilisé un ReplicaSet existant et n'a pas créé un quatrième modèle.
+
+{\footnotesize\color{teal} Source : 37-final-replicasets.txt.\par}
+\end{minipage}\par\medskip
 
 Le script attend explicitement ImagePullBackOff, capture l'état du Deployment et teste une
 requête HTTP pendant cet incident. Il revient ensuite à l'image précédente, attend la fin du
@@ -311,11 +1025,38 @@ Pendant l'image v9.99 : 5 réplicas disponibles et 31/31 sondes HTTP 200. Sur l'
 Un Pod temporaire BusyBox effectue une résolution DNS puis une requête HTTP depuis le réseau
 interne du cluster. Le script remplace le shell interactif par la même vérification automatisée.
 
+\par\medskip\noindent\begin{minipage}{\linewidth}
 \par\vspace{4pt}\noindent\begin{minipage}{\linewidth}
 \begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,frame=single,framesep=8pt,rulecolor=\color{teal}]
-kubectl run test --rm -i --restart=Never --image=busybox:1.36 --   sh -c 'nslookup whoami.default.svc.cluster.local && wget -qO- http://whoami.default.svc.cluster.local'
+$ kubectl run test --rm -i --restart=Never --image=busybox:1.36 -- sh -c 'nslookup whoami.default.svc.cluster.local && wget -qO- http://whoami.default.svc.cluster.local'
+Server:     10.96.0.10
+Address:    10.96.0.10:53
+
+
+Name:   whoami.default.svc.cluster.local
+Address: 10.96.151.170
+
+Hostname: whoami-c66799bf6-cxrpd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.14
+IP: fe80::8c62:edff:fefa:c80c
+RemoteAddr: 10.244.0.24:57500
+GET / HTTP/1.1
+Host: whoami.default.svc.cluster.local
+User-Agent: Wget
+Connection: close
+
+All commands and output from this session will be recorded in container logs, including credentials and sensitive information passed through the command prompt.
+If you don't see a command prompt, try pressing enter.
+pod "test" deleted from default namespace
 \end{Verbatim}
 \end{minipage}\par\vspace{6pt}
+
+Interprétation : Le serveur DNS 10.96.0.10 résout le nom du Service vers 10.96.151.170. wget reçoit une réponse d'un Pod whoami : la résolution DNS et l'accès HTTP interne fonctionnent. Le message final confirme la suppression automatique du Pod test avec --rm.
+
+{\footnotesize\color{teal} Source : 40-dns-challenge.txt.\par}
+\end{minipage}\par\medskip
 
 \begin{itemize}
 \item whoami : nom du Service.

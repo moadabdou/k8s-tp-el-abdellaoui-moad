@@ -381,6 +381,9 @@ rapports ni les images Docker téléchargées. Aucune purge globale Docker n'est
         live = capture_image('whoami-live-after-rollback', 'Capture directe de http://127.0.0.1:30080 après rollback : réponse réelle d’un Pod whoami en v1.11.')
         if live:
             add('Annexe M : accès HTTP après rollback', live)
+    if complete:
+        from command_results import enrich
+        sections = enrich(sections, evidence)
     markdown = '# Rapport de TP 4 : Kubernetes\n\n' + '\n'.join(sections)
     (OUT / 'Rapport_TP4_Kubernetes.md').write_text(markdown)
     tex = latex(markdown, complete)
@@ -485,6 +488,12 @@ def latex(markdown, complete):
     code, listed, annex_started, question_open = False, False, False, False
     lines = markdown.splitlines()
     for index, line in enumerate(lines):
+        if line == '<!-- command:start -->':
+            result.append(r'\par\medskip\noindent\begin{minipage}{\linewidth}')
+            continue
+        if line == '<!-- command:end -->':
+            result.append(r'\end{minipage}\par\medskip')
+            continue
         if line.startswith('```'):
             if listed:
                 result.append(r'\end{itemize}'); listed = False
@@ -540,6 +549,8 @@ def latex(markdown, complete):
             if not listed:
                 result.append(r'\begin{itemize}'); listed = True
             result.append(r'\item ' + inline(line[2:]))
+        elif line.startswith('Source : '):
+            result.append(r'{\footnotesize\color{teal} ' + escape(line) + r'\par}')
         else:
             result.append(inline(line))
     if listed:
