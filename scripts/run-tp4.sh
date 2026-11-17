@@ -124,7 +124,7 @@ capture 06-run-web.txt k run web --image=nginx:1.27 --port=80
 k wait --for=condition=Ready pod/web --timeout=240s
 capture 07-web-describe.txt k describe pod web
 capture 08-web-shell.txt k exec web -- sh -c 'hostname; nginx -v; cat /etc/os-release'
-k port-forward pod/web 8080:80 > "$RUN/09-port-forward.txt" 2>&1 & PF_PID=$!
+kubectl --context kind-tp-k8s --namespace default port-forward pod/web 8080:80 > "$RUN/09-port-forward.txt" 2>&1 & PF_PID=$!
 for ((i=0; i<30; i++)); do
     if curl --fail --silent --max-time 2 http://127.0.0.1:8080 > "$RUN/10-nginx.html"; then break; fi
     sleep 1
