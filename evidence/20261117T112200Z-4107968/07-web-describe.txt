@@ -1,0 +1,52 @@
+Name:             web
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             tp-k8s-control-plane/172.25.0.2
+Start Time:       Tue, 17 Nov 2026 11:23:29 +0000
+Labels:           run=web
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.5
+IPs:
+  IP:  10.244.0.5
+Containers:
+  web:
+    Container ID:   containerd://56c7a1730d4d781461fa31f3636172d5e8853b1eae9066a8496b521f11d3cf41
+    Image:          nginx:1.27
+    Image ID:       docker.io/library/nginx@sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 17 Nov 2026 11:23:37 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lx8kh (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-lx8kh:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  9s    default-scheduler  Successfully assigned default/web to tp-k8s-control-plane
+  Normal  Pulling    9s    kubelet            spec.containers{web}: Pulling image "nginx:1.27"
+  Normal  Pulled     1s    kubelet            spec.containers{web}: Successfully pulled image "nginx:1.27" in 8.085s (8.085s including waiting). Image size: 72406859 bytes.
+  Normal  Created    1s    kubelet            spec.containers{web}: Container created
+  Normal  Started    1s    kubelet            spec.containers{web}: Container started

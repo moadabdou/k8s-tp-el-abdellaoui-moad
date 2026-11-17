@@ -1,0 +1,20 @@
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                 SELECTOR
+deployment.apps/whoami   6/6     6            6           58s   whoami       traefik/whoami:v1.11   app=whoami
+
+NAME                                DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                 SELECTOR
+replicaset.apps/whoami-57487f77f    0         0         0       58s   whoami       traefik/whoami:v1.10   app=whoami,pod-template-hash=57487f77f
+replicaset.apps/whoami-86d567c94d   0         0         0       28s   whoami       traefik/whoami:v9.99   app=whoami,pod-template-hash=86d567c94d
+replicaset.apps/whoami-c66799bf6    6         6         6       39s   whoami       traefik/whoami:v1.11   app=whoami,pod-template-hash=c66799bf6
+
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE                   NOMINATED NODE   READINESS GATES
+pod/web                      1/1     Running   0          59s   10.244.0.6    tp-k8s-control-plane   <none>           <none>
+pod/whoami-c66799bf6-29r84   1/1     Running   0          32s   10.244.0.17   tp-k8s-control-plane   <none>           <none>
+pod/whoami-c66799bf6-5k9j4   1/1     Running   0          39s   10.244.0.16   tp-k8s-control-plane   <none>           <none>
+pod/whoami-c66799bf6-cxrpd   1/1     Running   0          39s   10.244.0.14   tp-k8s-control-plane   <none>           <none>
+pod/whoami-c66799bf6-tccgc   1/1     Running   0          31s   10.244.0.18   tp-k8s-control-plane   <none>           <none>
+pod/whoami-c66799bf6-ts87p   1/1     Running   0          39s   10.244.0.15   tp-k8s-control-plane   <none>           <none>
+pod/whoami-c66799bf6-z4vc9   1/1     Running   0          12s   10.244.0.23   tp-k8s-control-plane   <none>           <none>
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE   SELECTOR
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        99s   <none>
+service/whoami       NodePort    10.96.151.170   <none>        80:30080/TCP   58s   app=whoami

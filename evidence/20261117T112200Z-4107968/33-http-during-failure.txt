@@ -1,0 +1,11 @@
+Hostname: whoami-c66799bf6-5k9j4
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.16
+IP: fe80::40f0:31ff:fe9e:f568
+RemoteAddr: 10.244.0.1:60235
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+

@@ -1,0 +1,2 @@
+NAME           ADDRESSTYPE   PORTS   ENDPOINTS                                         AGE
+whoami-llmsp   IPv4          80      10.244.0.15,10.244.0.17,10.244.0.14 + 3 more...   58s

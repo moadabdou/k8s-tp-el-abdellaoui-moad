@@ -1,0 +1,1 @@
+pod "whoami-57487f77f-cxkzd" deleted from default namespace

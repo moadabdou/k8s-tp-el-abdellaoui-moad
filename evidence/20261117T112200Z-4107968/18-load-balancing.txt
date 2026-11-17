@@ -1,0 +1,220 @@
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:12530
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:15106
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+RemoteAddr: 10.244.0.1:25427
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+RemoteAddr: 10.244.0.1:47990
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:60619
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+RemoteAddr: 10.244.0.1:46523
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+RemoteAddr: 10.244.0.1:29360
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+RemoteAddr: 10.244.0.1:32039
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-cxkzd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.8
+IP: fe80::6090:d0ff:fe1d:a309
+RemoteAddr: 10.244.0.1:64074
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+RemoteAddr: 10.244.0.1:33117
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:6738
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:14778
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-cxkzd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.8
+IP: fe80::6090:d0ff:fe1d:a309
+RemoteAddr: 10.244.0.1:64111
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-nlgnj
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.9
+IP: fe80::4cf9:20ff:fe53:4427
+RemoteAddr: 10.244.0.1:61115
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-cxkzd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.8
+IP: fe80::6090:d0ff:fe1d:a309
+RemoteAddr: 10.244.0.1:23238
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-cxkzd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.8
+IP: fe80::6090:d0ff:fe1d:a309
+RemoteAddr: 10.244.0.1:10205
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-m9p8b
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.7
+IP: fe80::ac7e:c6ff:fe5f:f237
+RemoteAddr: 10.244.0.1:33572
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-cxkzd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.8
+IP: fe80::6090:d0ff:fe1d:a309
+RemoteAddr: 10.244.0.1:23682
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-cxkzd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.8
+IP: fe80::6090:d0ff:fe1d:a309
+RemoteAddr: 10.244.0.1:32150
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+
+Hostname: whoami-57487f77f-cxkzd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.8
+IP: fe80::6090:d0ff:fe1d:a309
+RemoteAddr: 10.244.0.1:4506
+GET / HTTP/1.1
+Host: 127.0.0.1:30080
+User-Agent: curl/8.23.0
+Accept: */*
+

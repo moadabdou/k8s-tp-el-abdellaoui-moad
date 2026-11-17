@@ -1,0 +1,23 @@
+[
+  {
+    "file": "nginx-live.png",
+    "url": "http://127.0.0.1:8080/",
+    "evidence": "20261117T112200Z-4107968",
+    "captured_utc": "2026-11-17T11:29:07.718898+00:00",
+    "method": "Playwright screenshot of the real HTTP page"
+  },
+  {
+    "file": "whoami-live-after-rollback.png",
+    "url": "http://127.0.0.1:30080/",
+    "evidence": "20261117T112200Z-4107968",
+    "captured_utc": "2026-11-17T11:29:08.597854+00:00",
+    "method": "Playwright screenshot of the real HTTP page"
+  },
+  {
+    "file": "whoami-live-during-update.png",
+    "url": "http://127.0.0.1:30080/",
+    "evidence": "20261117T112200Z-4107968",
+    "captured_utc": "2026-11-17T11:24:29.077585+00:00",
+    "method": "Playwright screenshot of the real HTTP page"
+  }
+]

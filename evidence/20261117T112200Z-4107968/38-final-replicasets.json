@@ -1,0 +1,241 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "apps/v1",
+            "kind": "ReplicaSet",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/desired-replicas": "6",
+                    "deployment.kubernetes.io/max-replicas": "8",
+                    "deployment.kubernetes.io/revision": "1"
+                },
+                "creationTimestamp": "2026-11-17T11:23:44Z",
+                "generation": 8,
+                "labels": {
+                    "app": "whoami",
+                    "pod-template-hash": "57487f77f"
+                },
+                "name": "whoami-57487f77f",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Deployment",
+                        "name": "whoami",
+                        "uid": "c76195fe-45a2-4db4-871f-d5fd93ad8c7a"
+                    }
+                ],
+                "resourceVersion": "940",
+                "uid": "52a1c098-eb04-4489-8590-638285b5a384"
+            },
+            "spec": {
+                "replicas": 0,
+                "selector": {
+                    "matchLabels": {
+                        "app": "whoami",
+                        "pod-template-hash": "57487f77f"
+                    }
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "app": "whoami",
+                            "pod-template-hash": "57487f77f"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "traefik/whoami:v1.10",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "whoami",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "observedGeneration": 8,
+                "replicas": 0,
+                "terminatingReplicas": 0
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "ReplicaSet",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/desired-replicas": "6",
+                    "deployment.kubernetes.io/max-replicas": "8",
+                    "deployment.kubernetes.io/revision": "3"
+                },
+                "creationTimestamp": "2026-11-17T11:24:14Z",
+                "generation": 3,
+                "labels": {
+                    "app": "whoami",
+                    "pod-template-hash": "86d567c94d"
+                },
+                "name": "whoami-86d567c94d",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Deployment",
+                        "name": "whoami",
+                        "uid": "c76195fe-45a2-4db4-871f-d5fd93ad8c7a"
+                    }
+                ],
+                "resourceVersion": "1101",
+                "uid": "b2a3e50a-c736-4d44-8e8a-2685d901cc5b"
+            },
+            "spec": {
+                "replicas": 0,
+                "selector": {
+                    "matchLabels": {
+                        "app": "whoami",
+                        "pod-template-hash": "86d567c94d"
+                    }
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "app": "whoami",
+                            "pod-template-hash": "86d567c94d"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "traefik/whoami:v9.99",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "whoami",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "observedGeneration": 3,
+                "replicas": 0,
+                "terminatingReplicas": 0
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "ReplicaSet",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/desired-replicas": "6",
+                    "deployment.kubernetes.io/max-replicas": "8",
+                    "deployment.kubernetes.io/revision": "4",
+                    "deployment.kubernetes.io/revision-history": "2"
+                },
+                "creationTimestamp": "2026-11-17T11:24:03Z",
+                "generation": 7,
+                "labels": {
+                    "app": "whoami",
+                    "pod-template-hash": "c66799bf6"
+                },
+                "name": "whoami-c66799bf6",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Deployment",
+                        "name": "whoami",
+                        "uid": "c76195fe-45a2-4db4-871f-d5fd93ad8c7a"
+                    }
+                ],
+                "resourceVersion": "1088",
+                "uid": "8148bc32-da33-4a64-9942-25f971f14e7f"
+            },
+            "spec": {
+                "replicas": 6,
+                "selector": {
+                    "matchLabels": {
+                        "app": "whoami",
+                        "pod-template-hash": "c66799bf6"
+                    }
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "app": "whoami",
+                            "pod-template-hash": "c66799bf6"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "traefik/whoami:v1.11",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "whoami",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 6,
+                "fullyLabeledReplicas": 6,
+                "observedGeneration": 7,
+                "readyReplicas": 6,
+                "replicas": 6,
+                "terminatingReplicas": 0
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

@@ -1,0 +1,9 @@
+NAME                                           READY   STATUS    RESTARTS   AGE   IP           NODE                   NOMINATED NODE   READINESS GATES
+coredns-559f6c778d-dvjsr                       1/1     Running   0          17s   10.244.0.4   tp-k8s-control-plane   <none>           <none>
+coredns-559f6c778d-krrlk                       1/1     Running   0          17s   10.244.0.2   tp-k8s-control-plane   <none>           <none>
+etcd-tp-k8s-control-plane                      1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kindnet-m9nkh                                  1/1     Running   0          18s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-apiserver-tp-k8s-control-plane            1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-controller-manager-tp-k8s-control-plane   1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-proxy-s565r                               1/1     Running   0          18s   172.25.0.2   tp-k8s-control-plane   <none>           <none>
+kube-scheduler-tp-k8s-control-plane            1/1     Running   0          23s   172.25.0.2   tp-k8s-control-plane   <none>           <none>

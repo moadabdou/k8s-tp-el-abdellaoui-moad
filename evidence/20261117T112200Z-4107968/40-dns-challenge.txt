@@ -1,0 +1,21 @@
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+
+Name:	whoami.default.svc.cluster.local
+Address: 10.96.151.170
+
+Hostname: whoami-c66799bf6-cxrpd
+IP: 127.0.0.1
+IP: ::1
+IP: 10.244.0.14
+IP: fe80::8c62:edff:fefa:c80c
+RemoteAddr: 10.244.0.24:57500
+GET / HTTP/1.1
+Host: whoami.default.svc.cluster.local
+User-Agent: Wget
+Connection: close
+
+All commands and output from this session will be recorded in container logs, including credentials and sensitive information passed through the command prompt.
+If you don't see a command prompt, try pressing enter.
+pod "test" deleted from default namespace

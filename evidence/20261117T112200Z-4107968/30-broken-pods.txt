@@ -1,0 +1,9 @@
+NAME                      READY   STATUS             RESTARTS   AGE   IP            NODE                   NOMINATED NODE   READINESS GATES
+whoami-86d567c94d-fpxh5   0/1     ImagePullBackOff   0          16s   10.244.0.20   tp-k8s-control-plane   <none>           <none>
+whoami-86d567c94d-hgqbh   0/1     ErrImagePull       0          16s   10.244.0.21   tp-k8s-control-plane   <none>           <none>
+whoami-86d567c94d-pkdk2   0/1     ErrImagePull       0          16s   10.244.0.22   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-29r84    1/1     Running            0          20s   10.244.0.17   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-5k9j4    1/1     Running            0          27s   10.244.0.16   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-cxrpd    1/1     Running            0          27s   10.244.0.14   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-tccgc    1/1     Running            0          19s   10.244.0.18   tp-k8s-control-plane   <none>           <none>
+whoami-c66799bf6-ts87p    1/1     Running            0          27s   10.244.0.15   tp-k8s-control-plane   <none>           <none>

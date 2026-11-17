@@ -1,0 +1,2 @@
+deployment.apps/whoami created
+service/whoami created

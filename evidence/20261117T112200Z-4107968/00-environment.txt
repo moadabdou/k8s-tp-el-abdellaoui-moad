@@ -1,0 +1,38 @@
+2026-11-17T11:22:06+00:00
+Linux 7.3.1-1-cachyos x86_64 GNU/Linux
+               total        used        free      shared  buff/cache   available
+Mem:           7.5Gi       5.0Gi       971Mi       286Mi       2.1Gi       2.5Gi
+Swap:           14Gi       6.4Gi       8.5Gi
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1  236G  207G   27G  89% /home
+Client:
+ Version:           29.9.3
+ API version:       1.56
+ Go version:        go1.27.3-X:nodwarf5
+ Git commit:        5457199aa5
+ Built:             Thu Nov  5 15:25:16 2026
+ OS/Arch:           linux/amd64
+ Context:           default
+
+Server:
+ Engine:
+  Version:          29.9.3
+  API version:      1.56 (minimum version 1.40)
+  Go version:       go1.27.3-X:nodwarf5
+  Git commit:       70efc0e31d
+  Built:            Thu Nov  5 15:25:16 2026
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          v2.4.2
+  GitCommit:        b7a25261e029d68978bbf290df0a62fc819b3c51.m
+ runc:
+  Version:          1.5.2
+  GitCommit:        1.5.2-1-0-g17cc947-dirty
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+kind v0.33.0 go1.26.7 linux/amd64
+Client Version: v1.37.0
+Kustomize Version: v5.8.1
+version.BuildInfo{Version:"v4.3.1", GitCommit:"c0d08d0d6d9424d4a14febb5e8a3e51b0dd00dff", GitTreeState:"clean", GoVersion:"go1.27.2", KubeClientVersion:"v1.37"}

@@ -1,0 +1,42 @@
+Name:                   whoami
+Namespace:              default
+CreationTimestamp:      Tue, 17 Nov 2026 11:23:44 +0000
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 3
+Selector:               app=whoami
+Replicas:               6 desired | 3 updated | 8 total | 5 available | 3 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=whoami
+  Containers:
+   whoami:
+    Image:         traefik/whoami:v9.99
+    Port:          80/TCP
+    Host Port:     0/TCP
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    ReplicaSetUpdated
+OldReplicaSets:  whoami-57487f77f (0/0 replicas created), whoami-c66799bf6 (5/5 replicas created)
+NewReplicaSet:   whoami-86d567c94d (3/3 replicas created)
+Events:
+  Type    Reason             Age                From                   Message
+  ----    ------             ----               ----                   -------
+  Normal  ScalingReplicaSet  46s                deployment-controller  Scaled up replica set whoami-57487f77f from 0 to 3
+  Normal  ScalingReplicaSet  30s                deployment-controller  Scaled up replica set whoami-57487f77f from 3 to 6
+  Normal  ScalingReplicaSet  27s                deployment-controller  Scaled up replica set whoami-c66799bf6 from 0 to 2
+  Normal  ScalingReplicaSet  27s                deployment-controller  Scaled down replica set whoami-57487f77f from 6 to 5
+  Normal  ScalingReplicaSet  27s                deployment-controller  Scaled up replica set whoami-c66799bf6 from 2 to 3
+  Normal  ScalingReplicaSet  20s                deployment-controller  Scaled down replica set whoami-57487f77f from 5 to 4
+  Normal  ScalingReplicaSet  20s                deployment-controller  Scaled up replica set whoami-c66799bf6 from 3 to 4
+  Normal  ScalingReplicaSet  19s                deployment-controller  Scaled down replica set whoami-57487f77f from 4 to 3
+  Normal  ScalingReplicaSet  19s                deployment-controller  Scaled up replica set whoami-c66799bf6 from 4 to 5
+  Normal  ScalingReplicaSet  16s (x7 over 18s)  deployment-controller  (combined from similar events): Scaled up replica set whoami-86d567c94d from 2 to 3

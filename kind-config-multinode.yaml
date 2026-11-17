@@ -1,0 +1,13 @@
+# Topologie originale du sujet, à utiliser sur une machine avec plus de RAM.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: tp-k8s
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 30080
+        listenAddress: "127.0.0.1"
+        protocol: TCP
+  - role: worker
+  - role: worker

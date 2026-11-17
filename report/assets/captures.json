@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "cluster-config",
+    "source": "kind-config.yaml",
+    "title": "Configuration du cluster kind",
+    "subtitle": "Fichier local : variante à un nœud",
+    "image": "assets/cluster-config.png"
+  },
+  {
+    "slug": "service-config",
+    "source": "whoami.yaml",
+    "title": "Deployment et Service whoami",
+    "subtitle": "Fichier local : manifeste initial du sujet",
+    "image": "assets/service-config.png"
+  },
+  {
+    "slug": "cluster-nodes",
+    "source": "evidence/20261117T112200Z-4107968/03-nodes.txt",
+    "title": "Nœuds du cluster",
+    "subtitle": "Sortie réelle enregistrée pendant le TP",
+    "image": "assets/cluster-nodes.png"
+  },
+  {
+    "slug": "system-pods",
+    "source": "evidence/20261117T112200Z-4107968/04-system-pods.txt",
+    "title": "Composants de kube-system",
+    "subtitle": "Sortie réelle enregistrée pendant le TP",
+    "image": "assets/system-pods.png"
+  },
+  {
+    "slug": "resources",
+    "source": "evidence/20261117T112200Z-4107968/16-resources.txt",
+    "title": "Deployment, Pods et Service",
+    "subtitle": "Sortie réelle enregistrée pendant le TP",
+    "image": "assets/resources.png"
+  },
+  {
+    "slug": "broken-image",
+    "source": "evidence/20261117T112200Z-4107968/30-broken-pods.txt",
+    "title": "Observation de l’image invalide",
+    "subtitle": "Sortie réelle enregistrée pendant le TP",
+    "image": "assets/broken-image.png"
+  },
+  {
+    "slug": "rollout-history",
+    "source": "evidence/20261117T112200Z-4107968/36-rollout-history.txt",
+    "title": "Historique après rollback",
+    "subtitle": "Sortie réelle enregistrée pendant le TP",
+    "image": "assets/rollout-history.png"
+  },
+  {
+    "slug": "dns",
+    "source": "evidence/20261117T112200Z-4107968/40-dns-challenge.txt",
+    "title": "Résolution DNS depuis BusyBox",
+    "subtitle": "Sortie réelle enregistrée pendant le TP",
+    "image": "assets/dns.png"
+  }
+]

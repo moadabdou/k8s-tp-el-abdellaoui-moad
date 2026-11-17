@@ -1,0 +1,14 @@
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                 SELECTOR
+deployment.apps/whoami   6/6     6            6           17s   whoami       traefik/whoami:v1.10   app=whoami
+
+NAME                               DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                 SELECTOR
+replicaset.apps/whoami-57487f77f   6         6         6       17s   whoami       traefik/whoami:v1.10   app=whoami,pod-template-hash=57487f77f
+
+NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE                   NOMINATED NODE   READINESS GATES
+pod/web                      1/1     Running   0          18s   10.244.0.6    tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-kd87d   1/1     Running   0          1s    10.244.0.12   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-m9p8b   1/1     Running   0          17s   10.244.0.7    tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-mn8lw   1/1     Running   0          3s    10.244.0.10   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-nlgnj   1/1     Running   0          17s   10.244.0.9    tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-nnt6x   1/1     Running   0          1s    10.244.0.13   tp-k8s-control-plane   <none>           <none>
+pod/whoami-57487f77f-vd52v   1/1     Running   0          1s    10.244.0.11   tp-k8s-control-plane   <none>           <none>
