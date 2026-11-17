@@ -112,6 +112,8 @@ reste dans .state et ne doit pas être publié.
 
 Versions exécutées : Docker 29.9.3, kind v0.33.0, Kubernetes v1.37.0 et Helm v4.3.1.
 L'image du nœud kind est fixée par digest. La preuve 00-environment.txt conserve les versions complètes.
+Les fichiers de configuration effectivement utilisés sont reproduits en YAML et commentés
+dans les annexes A à C, avec les paramètres finaux observés après le rollback.
 ''')
     add('3. Partie A : création du cluster', '''
 Le script exécute docker run hello-world puis crée le cluster tp-k8s à partir de kind-config.yaml.
@@ -352,14 +354,47 @@ rapports ni les images Docker téléchargées. Aucune purge globale Docker n'est
 - Installation de kubectl : https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 - Installation de Helm : https://helm.sh/docs/intro/install/
 ''')
+    config_notes = {
+        'kind-config.yaml': '''
+- kind et apiVersion identifient le format de configuration kind ; name fixe le nom du cluster tp-k8s.
+- nodes déclare le nœud control-plane qui a été créé pendant ce TP.
+- extraPortMappings publie le port 30080 du nœud sur le même port de l'hôte.
+- listenAddress=127.0.0.1 réserve cet accès à la machine locale ; protocol=TCP correspond au trafic HTTP.
+
+Le fichier kind-config-multinode.yaml est une variante fournie avec le projet ; il n'a pas été utilisé pour l'exécution documentée.
+''',
+        'pod.yaml': '''
+- metadata.name donne au Pod le nom web ; le label run=web permet de le retrouver après sa suppression.
+- containers déclare un conteneur web utilisant l'image nginx:1.27 ; containerPort=80 décrit le port HTTP du conteneur.
+- restartPolicy=Always redémarre les conteneurs du Pod en cas d'arrêt, mais ne recrée pas un objet Pod supprimé.
+- Aucun contrôleur n'est défini dans ce fichier : web est un Pod autonome, recréé ensuite par kubectl apply.
+''',
+        'whoami.yaml': '''
+- Le premier document crée le Deployment whoami avec trois réplicas initiaux et l'image traefik/whoami:v1.10.
+- selector.matchLabels et template.metadata.labels utilisent app=whoami : le ReplicaSet reconnaît ainsi les Pods qu'il doit maintenir.
+- Le second document, séparé par ---, crée le Service NodePort ; son sélecteur app=whoami désigne les mêmes Pods.
+- port=80 est le port du Service, targetPort=80 celui des conteneurs et nodePort=30080 le port exposé sur le nœud.
+
+Le manifeste ci-dessus est l'état initial utilisé avec kubectl apply. Les commandes du TP ont ensuite porté le nombre de réplicas à six et changé l'image. L'état final observé est donné ci-dessous ; le Service conserve sa configuration initiale.
+''',
+    }
     for title, path in [('Annexe A : configuration du cluster', 'kind-config.yaml'),
                         ('Annexe B : manifeste du Pod', 'pod.yaml'),
                         ('Annexe C : Deployment et Service', 'whoami.yaml')]:
-        slug = {'kind-config.yaml': 'cluster-config', 'whoami.yaml': 'service-config'}.get(path)
-        if slug and (OUT/'assets'/f'{slug}.png').exists():
-            add(title, capture_image(slug, f'Vue du fichier {path}, reproduit depuis le manifeste local.'))
-        else:
-            add(title, '```yaml\n' + (ROOT / path).read_text().strip() + '\n```')
+        body = 'Fichier utilisé : '+path+'.\n\n```yaml\n'+(ROOT/path).read_text().strip()+'\n```\n\n'+config_notes[path]
+        if path == 'kind-config.yaml':
+            image_match = re.search(r'--image (kindest/node:[^\s]+)',read('session.txt'))
+            if image_match:
+                body += '\nImage du nœud passée à kind avec le paramètre --image :\n\n```text\n'+image_match.group(1)+'\n```\n'
+        if path == 'whoami.yaml' and final:
+            spec = final['spec']; rolling = spec['strategy']['rollingUpdate']
+            container = spec['template']['spec']['containers'][0]
+            body += ('\n<!-- command:start -->\nExtrait des paramètres finaux du Deployment, tiré de 39-final-deployment.json :\n\n```yaml\n'
+                     f"spec:\n  replicas: {spec['replicas']}\n  strategy:\n    type: {spec['strategy']['type']}\n"
+                     f"    rollingUpdate:\n      maxUnavailable: \"{rolling['maxUnavailable']}\"\n      maxSurge: \"{rolling['maxSurge']}\"\n"
+                     f"  template:\n    spec:\n      containers:\n        - name: {container['name']}\n          image: {container['image']}\n```\n"
+                     '\nL’image v9.99 a été utilisée uniquement pour provoquer ImagePullBackOff. Le rollback a rétabli v1.11 ; les valeurs de RollingUpdate sont les valeurs par défaut observées dans le Deployment.\n<!-- command:end -->\n')
+        add(title, body)
     evidence_appendices = [('Annexe D : environnement', '00-environment.txt'),
                         ('Annexe E : nœuds et composants système', '03-nodes.txt'),
                         ('Annexe F : Pods système', '04-system-pods.txt'),
@@ -522,7 +557,7 @@ def latex(markdown, complete):
             title = line[3:]
             title = re.sub(r'^\d+\. ', '', title)
             if title.startswith('Annexe'):
-                if not annex_started:
+                if not annex_started or title.startswith(('Annexe B :','Annexe C :')):
                     result.append(r'\clearpage')
                     annex_started = True
                 result.append(r'\section*{' + escape(title) + '}')

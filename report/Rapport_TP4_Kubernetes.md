@@ -9,7 +9,7 @@ le déploiement de whoami, son exposition par un Service NodePort, la montée en
 gestion d'une mise à jour suivie d'un retour arrière. Le défi final vérifie la résolution DNS interne.
 
 Sujet : TP 4 Kubernetes, GL ENSAH, Université Abdelmalek Essaadi, année universitaire 2026/2027.
-Réalisé par : El Abdellaoui Moad. Date de génération : 17/11/2026 11:50.
+Réalisé par : El Abdellaoui Moad. Date de génération : 17/11/2026 11:55.
 
 Le rapport présente les configurations, la démarche et les réponses aux questions du sujet.
 Les observations expérimentales sont regroupées dans la section des résultats.
@@ -29,6 +29,8 @@ reste dans .state et ne doit pas être publié.
 
 Versions exécutées : Docker 29.9.3, kind v0.33.0, Kubernetes v1.37.0 et Helm v4.3.1.
 L'image du nœud kind est fixée par digest. La preuve 00-environment.txt conserve les versions complètes.
+Les fichiers de configuration effectivement utilisés sont reproduits en YAML et commentés
+dans les annexes A à C, avec les paramètres finaux observés après le rollback.
 
 
 <!-- command:start -->
@@ -936,9 +938,39 @@ rapports ni les images Docker téléchargées. Aucune purge globale Docker n'est
 
 ## Annexe A : configuration du cluster
 
-![Vue du fichier kind-config.yaml, reproduit depuis le manifeste local.](assets/cluster-config.png)
+Fichier utilisé : kind-config.yaml.
+
+```yaml
+# Variante à un nœud autorisée par le sujet pour les machines à RAM limitée.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: tp-k8s
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 30080
+        listenAddress: "127.0.0.1"
+        protocol: TCP
+```
+
+
+- kind et apiVersion identifient le format de configuration kind ; name fixe le nom du cluster tp-k8s.
+- nodes déclare le nœud control-plane qui a été créé pendant ce TP.
+- extraPortMappings publie le port 30080 du nœud sur le même port de l'hôte.
+- listenAddress=127.0.0.1 réserve cet accès à la machine locale ; protocol=TCP correspond au trafic HTTP.
+
+Le fichier kind-config-multinode.yaml est une variante fournie avec le projet ; il n'a pas été utilisé pour l'exécution documentée.
+
+Image du nœud passée à kind avec le paramètre --image :
+
+```text
+kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5
+```
 
 ## Annexe B : manifeste du Pod
+
+Fichier utilisé : pod.yaml.
 
 ```yaml
 apiVersion: v1
@@ -956,9 +988,79 @@ spec:
   restartPolicy: Always
 ```
 
+
+- metadata.name donne au Pod le nom web ; le label run=web permet de le retrouver après sa suppression.
+- containers déclare un conteneur web utilisant l'image nginx:1.27 ; containerPort=80 décrit le port HTTP du conteneur.
+- restartPolicy=Always redémarre les conteneurs du Pod en cas d'arrêt, mais ne recrée pas un objet Pod supprimé.
+- Aucun contrôleur n'est défini dans ce fichier : web est un Pod autonome, recréé ensuite par kubectl apply.
+
 ## Annexe C : Deployment et Service
 
-![Vue du fichier whoami.yaml, reproduit depuis le manifeste local.](assets/service-config.png)
+Fichier utilisé : whoami.yaml.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami:v1.10
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+spec:
+  type: NodePort
+  selector:
+    app: whoami
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
+```
+
+
+- Le premier document crée le Deployment whoami avec trois réplicas initiaux et l'image traefik/whoami:v1.10.
+- selector.matchLabels et template.metadata.labels utilisent app=whoami : le ReplicaSet reconnaît ainsi les Pods qu'il doit maintenir.
+- Le second document, séparé par ---, crée le Service NodePort ; son sélecteur app=whoami désigne les mêmes Pods.
+- port=80 est le port du Service, targetPort=80 celui des conteneurs et nodePort=30080 le port exposé sur le nœud.
+
+Le manifeste ci-dessus est l'état initial utilisé avec kubectl apply. Les commandes du TP ont ensuite porté le nombre de réplicas à six et changé l'image. L'état final observé est donné ci-dessous ; le Service conserve sa configuration initiale.
+
+<!-- command:start -->
+Extrait des paramètres finaux du Deployment, tiré de 39-final-deployment.json :
+
+```yaml
+spec:
+  replicas: 6
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: "25%"
+      maxSurge: "25%"
+  template:
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami:v1.11
+```
+
+L’image v9.99 a été utilisée uniquement pour provoquer ImagePullBackOff. Le rollback a rétabli v1.11 ; les valeurs de RollingUpdate sont les valeurs par défaut observées dans le Deployment.
+<!-- command:end -->
 
 ## Annexe D : environnement
 
